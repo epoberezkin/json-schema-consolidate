@@ -8,30 +8,38 @@ Unified api to different JSON-schema validators
 [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
 
 
-## Usage
+## Install
 
 ```
 npm install json-schema-consolidate
 ```
 
-json-schema-consolidate will not install all validators - you have to install the validator(s) you use separately.
+json-schema-consolidate will not install any validators - you have to install the validator(s) that you use separately.
 
 
-## Api
+## Usage
 
 ```
-var Validator = require('json-schema-consolidate')('is-my-json-valid');
-var validator = Validator(options);
+var consolidate = require('json-schema-consolidate');
+var Validator = consolidate('is-my-json-valid');
+var validator = new Validator(options); // or Validator(options);
+```
+
+or
+
+```
+var consolidate = require('json-schema-consolidate');
+var validator = consolidate('is-my-json-valid', options);
 ```
 
 
 ### Validate
 
 ```
-var result = validator.validate(json, schema); // { valid: true/false, errors: [...] }
+var result = validator.validate(schema, json); // { valid: true/false, errors: [...] }
 ```
 
-For compiling validators, this method will cache compiled schemas using serialized schema as a key ([json-stable-stringify]() is used).
+For compiling validators, this method will cache compiled schemas using serialized schema as a key ([json-stable-stringify](https://github.com/substack/json-stable-stringify) is used).
 
 
 ### Create validator function
@@ -78,3 +86,8 @@ These options are available in all supported validators:
 
 
 Validator specific options can also be passed.
+
+
+## License
+
+[MIT](https://github.com/epoberezkin/json-schema-consolidate/blob/master/LICENSE)
