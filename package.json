@@ -1,0 +1,32 @@
+{
+  "name": "json-schema-consolidate",
+  "version": "0.0.0",
+  "description": "Unified api to different JSON-schema validators",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epoberezkin/json-schema-consolidate.git"
+  },
+  "keywords": [
+    "JSON",
+    "schema",
+    "validator",
+    "adapter",
+    "consolidate"
+  ],
+  "author": "Evgeny Poberezkin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/epoberezkin/json-schema-consolidate/issues"
+  },
+  "homepage": "https://github.com/epoberezkin/json-schema-consolidate",
+  "dependencies": {
+    "json-stable-stringify": "^1.0.0"
+  },
+  "devDependencies": {
+    "is-my-json-valid": "^2.12.0"
+  }
+}
