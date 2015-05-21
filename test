@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+summary=$1
+validator=${2:-"is-my-json-valid"}
+
+results=$(json-schema-tests "spec/adapter/$validator.js")
+
+if [[ $summary == "summary" ]]; then
+    echo "$results" | grep -i 'passed'
+else
+    echo "$results"
+fi

@@ -1,6 +1,6 @@
 {
   "name": "json-schema-consolidate",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Unified api to different JSON-schema validators",
   "main": "index.js",
   "scripts": {

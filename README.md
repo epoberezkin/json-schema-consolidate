@@ -88,6 +88,37 @@ These options are available in all supported validators:
 Validator specific options can also be passed.
 
 
+## Running tests
+
+To run tests you need to install [json-schema-tests](https://github.com/pandastrike/json-schema-tests):
+
+```
+npm install -g coffee-script
+npm install -g json-schema-tests
+```
+
+Then you can run tests with `./test` script:
+
+
+```
+./test
+```
+
+or
+
+
+```
+./test --full
+```
+
+or
+
+
+```
+test is-my-json-valid
+```
+
+
 ## License
 
 [MIT](https://github.com/epoberezkin/json-schema-consolidate/blob/master/LICENSE)
