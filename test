@@ -2,7 +2,7 @@
 
 validator=$1
 
-VALIDATORS=( "is-my-json-valid" "tv4" )
+VALIDATORS=( "is-my-json-valid" "jjv" "tv4" )
 
 if [[ $validator == "" || $validator == "--full" ]]; then
     for val in "${VALIDATORS[@]}"; do

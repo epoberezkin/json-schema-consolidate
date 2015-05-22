@@ -7,6 +7,8 @@ Unified api to different JSON-schema validators
 
 [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
 
+[jjv](https://github.com/acornejo/jjv)
+
 [tv4](https://github.com/geraintluff/tv4)
 
 
@@ -90,10 +92,24 @@ These options are available in all supported validators:
 
 - schemas - include some schemas, same result as calling `addSchema` method
 
-- formats - define additional formats, validator dependent
+- formats - define additional formats, all validators support RegExp, most support functions.
 
 
 Validator specific options can also be passed.
+
+
+## Validators compatibility
+
+### Compiling:
+
+__is-my-json-valid__ - functions in custom format not not supported
+
+
+### Interpreting:
+
+__jjv__ - options `allErrors` and `verbose` not supported. "Compiling" schema registers it (`addSchema`) if `schema.id` is present.
+
+__tv4__ - option `verbose` not supported.
 
 
 ## Running tests
