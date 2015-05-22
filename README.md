@@ -7,6 +7,8 @@ Unified api to different JSON-schema validators
 
 [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
 
+[tv4](https://github.com/geraintluff/tv4)
+
 
 ## Install
 
@@ -14,7 +16,7 @@ Unified api to different JSON-schema validators
 npm install json-schema-consolidate
 ```
 
-json-schema-consolidate will not install any validators - you have to install the validator(s) that you use separately.
+json-schema-consolidate will not install any validators - you have to install the validator(s) that you use separately (so you don't have to update this package when you want to update validator).
 
 
 ## Usage
@@ -39,10 +41,14 @@ var validator = consolidate('is-my-json-valid', options);
 var result = validator.validate(schema, json); // { valid: true/false, errors: [...] }
 ```
 
+`schema` can be a string, in which case it will be JSON.parse'd.
+
+If you need to validate with the previously added schema, you can either use `getSchema` to retrieve it or pass `{ $ref: '<id>' }` as the schema.
+
 For compiling validators, this method will cache compiled schemas using serialized schema as a key ([json-stable-stringify](https://github.com/substack/json-stable-stringify) is used).
 
 
-### Create validator function
+### Create validating function
 
 ```
 var validate = validator.compile(schema);
@@ -62,6 +68,8 @@ validator.addSchema(schema, id);
 
 If `id` is not passed, schema.id will be used
 
+`schema` can be array of schemas, in which case the second parameter is not used.
+
 
 ### Get schema
 
@@ -80,7 +88,7 @@ These options are available in all supported validators:
 
 - verbose - validator dependent
 
-- schemas - add some schemas, same result as calling `addSchema` method
+- schemas - include some schemas, same result as calling `addSchema` method
 
 - formats - define additional formats, validator dependent
 
@@ -90,9 +98,10 @@ Validator specific options can also be passed.
 
 ## Running tests
 
-To run tests you need to install [json-schema-tests](https://github.com/pandastrike/json-schema-tests):
+To run tests you need to install [json-schema-tests](https://github.com/pandastrike/json-schema-tests) and all validators:
 
 ```
+npm install
 npm install -g coffee-script
 npm install -g json-schema-tests
 ```

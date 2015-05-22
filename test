@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 
-summary=$1
-validator=${2:-"is-my-json-valid"}
+validator=$1
 
-results=$(json-schema-tests "spec/adapter/$validator.js")
+VALIDATORS=( "is-my-json-valid" "tv4" )
 
-if [[ $summary == "summary" ]]; then
-    echo "$results" | grep -i 'passed'
+if [[ $validator == "" || $validator == "--full" ]]; then
+    for val in "${VALIDATORS[@]}"; do
+        results=$(json-schema-tests "spec/adapter/$val.js")
+        if [[ $validator == "--full" ]]; then
+            echo $'\n\n'"Testing ${val}"$'\n'
+            echo "$results"
+        else
+            echo "${val}: $(echo "$results" | grep -i 'passed')"
+        fi
+    done
 else
-    echo "$results"
+    json-schema-tests "spec/adapter/$validator.js"
 fi
