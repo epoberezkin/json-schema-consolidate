@@ -7,6 +7,7 @@ var VALIDATOR = process.env.JSC_VALIDATOR;
 var validators = VALIDATOR ? [VALIDATOR] : [
   "is-my-json-valid",
   "jjv",
+  "skeemas",
   "tv4"
 ];
 
@@ -75,27 +76,29 @@ function describeConsolidate(validatorName) {
       });
 
       it('should add schema via options', function() {
-        validator = new Validator({schemas: {schema1: SCHEMA1}});
+        validator = new Validator({schemas: {'/schema1': SCHEMA1}});
         assertGetSchema();
         assertValid(validator.validate(SCHEMA2, VALID2));
         assertInvalid(validator.validate(SCHEMA2, INVALID2));
       });
 
       it('should add stringified schema via options', function() {
-        validator = new Validator({schemas: {schema1: JSON.stringify(SCHEMA1)}});
+        validator = new Validator({schemas: {'/schema1': JSON.stringify(SCHEMA1)}});
         assertGetSchema();
         assertValid(validator.validate(SCHEMA2, VALID2));
         assertInvalid(validator.validate(SCHEMA2, INVALID2));
       });
 
-      it('should add custom regexp format via options', function() {
+      (validatorName == 'skeemas' ? it.skip : it)
+      ('should add custom regexp format via options', function() {
         validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/i}});
         assertValid(validator.validate(SCHEMA3, VALID3));
         assertInvalid(validator.validate(SCHEMA3, INVALID3));
       });
 
       function assertValid(result) {
-        assert.deepEqual(result, { valid: true, errors: [] });
+        assert(result.valid)
+        assert.deepEqual(result.errors, []);
       }
 
       function assertInvalid(result) {
@@ -113,7 +116,7 @@ function describeConsolidate(validatorName) {
 
 function createTestSchemas() {
   SCHEMA1 = {
-    id: 'schema1',
+    id: '/schema1',
     type: 'object',
     properties: {
       s: { type: 'string' },
@@ -127,9 +130,9 @@ function createTestSchemas() {
   INVALID1 = { s: 1, n: 'test' };
 
   SCHEMA2 = {
-    id: 'schema2',
+    id: '/schema2',
     type: 'array',
-    items: {'$ref': 'schema1'},
+    items: {'$ref': '/schema1'},
     additionalItems: false
   };
 
@@ -138,7 +141,7 @@ function createTestSchemas() {
 
 
   SCHEMA3 = {
-    id: 'schema1',
+    id: '/schema3',
     type: 'object',
     properties: {
       x: { type: 'string', format: 'my_identifier' },

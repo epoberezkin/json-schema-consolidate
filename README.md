@@ -9,6 +9,8 @@ Unified api to different JSON-schema validators
 
 [jjv](https://github.com/acornejo/jjv)
 
+[skeemas](https://github.com/Prestaul/skeemas)
+
 [tv4](https://github.com/geraintluff/tv4)
 
 
@@ -104,14 +106,16 @@ Validator specific options can also be passed.
 
 ### Compiling:
 
-__is-my-json-valid__ - functions in custom format not not supported
+__is-my-json-valid__ - functions in custom formats not not supported
 
 
 ### Interpreting:
 
 __jjv__ - options `allErrors` and `verbose` not supported. "Compiling" schema registers it (`addSchema`) if `schema.id` is present.
 
-__tv4__ - option `verbose` not supported.
+__skeemas__ - not supported: custom formats, `verbose`.
+
+__tv4__ - not supported: `verbose`.
 
 
 ## Running tests

@@ -1,6 +1,6 @@
 {
   "name": "json-schema-consolidate",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Unified api to different JSON-schema validators",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "jjv": "^1.0.2",
     "json-schema-tests": "^0.1.1",
     "mocha": "^2.2.5",
+    "skeemas": "^1.1.6",
     "tv4": "^1.1.9"
   }
 }
