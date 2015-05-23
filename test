@@ -8,6 +8,7 @@ VALIDATORS=(
     "jjv"
     "jsen"
     "jsonschema"
+    "schemasaurus"
     "skeemas"
     "tv4"
     "z-schema"

@@ -9,6 +9,7 @@ Unified interface to different JSON-schema validators
 - [jjv](https://github.com/acornejo/jjv)
 - [jsen](https://github.com/bugventure/jsen)
 - [jsonschema](https://github.com/tdegrunt/jsonschema)
+- [schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)
 - [skeemas](https://github.com/Prestaul/skeemas)
 - [tv4](https://github.com/geraintluff/tv4)
 - [z-schema](https://github.com/zaggino/z-schema#register-a-custom-format)
@@ -107,10 +108,11 @@ Validator specific options can also be passed.
 
 |validator|addSchema|allErrors|formats|compile|
 |---------|:-------:|:-------:|:-----:|:-----:|
-|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|short|-|RegExp|+|
+|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|short|-|+|+|
 |[jjv](https://github.com/acornejo/jjv)|+|-|+|-|
 |[jsen](https://github.com/bugventure/jsen)|-|-|+|+|
 |[jsonschema](https://github.com/tdegrunt/jsonschema)|full|+|-|-|
+|[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|RegExp|-|
 |[skeemas](https://github.com/Prestaul/skeemas)|full|-|-|-|
 |[tv4](https://github.com/geraintluff/tv4)|+|+|+|-|
 |[z-schema](https://github.com/zaggino/z-schema)|+|+|+|-|

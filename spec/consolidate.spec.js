@@ -10,6 +10,7 @@ var VALIDATORS = {
   "jjv":              { allErrors: false },
   "jsen":             { addSchema: false, allErrors: false },
   "jsonschema":       { fullUris: true, customFormats: false },
+  "schemasaurus":     { addSchema: false, allErrors: false, customFormats: RegExp },
   "skeemas":          { fullUris: true, customFormats: false, allErrors: false },
   "tv4":              { },
   "z-schema":         { }
@@ -23,7 +24,7 @@ validators.forEach(describeConsolidate);
 
 
 function describeConsolidate(validatorName) {
-  describe('consolidate with ' + validatorName, function() {
+  describe(validatorName, function() {
     var SCHEMA, VALID, INVALID;
     var Validator;
 
@@ -105,12 +106,25 @@ function describeConsolidate(validatorName) {
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      var skipCustomFormats = VALIDATORS[validatorName].customFormats === false;
+      var customFormats = VALIDATORS[validatorName].customFormats;
+      var skipCustomFormats = customFormats === false;
       (skipCustomFormats ? it.skip : it)
-      ('should add custom regexp format via options', function() {
+      ('should support custom regexp format via options', function() {
         validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/i}});
         assertValid(validator.validate(SCHEMA[3], VALID[3]));
         assertInvalid(validator.validate(SCHEMA[3], INVALID[3]));
+      });
+
+      var skipFuncFormats = skipCustomFormats || customFormats == RegExp;
+      (skipFuncFormats ? it.skip : it)
+      ('should support custom function format via options', function() {
+        validator = new Validator({formats: {my_identifier: my_identifier}});
+        assertValid(validator.validate(SCHEMA[3], VALID[3]));
+        assertInvalid(validator.validate(SCHEMA[3], INVALID[3]));
+
+        function my_identifier(str) {
+          return /^[a-z][a-z0-9_]*$/i.test(str);
+        }
       });
 
       var skipAllErrors = VALIDATORS[validatorName].allErrors === false;
