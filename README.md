@@ -5,22 +5,25 @@ Unified api to different JSON-schema validators
 
 ## Supported validators
 
-[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
+- [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
+- [jjv](https://github.com/acornejo/jjv)
+- [skeemas](https://github.com/Prestaul/skeemas)
+- [tv4](https://github.com/geraintluff/tv4)
+- [z-schema](https://github.com/zaggino/z-schema#register-a-custom-format)
 
-[jjv](https://github.com/acornejo/jjv)
+You must install the validators you use separately.
 
-[skeemas](https://github.com/Prestaul/skeemas)
-
-[tv4](https://github.com/geraintluff/tv4)
+See Validators compatibility and [json-schema-benchmark](https://github.com/ebdrup/json-schema-benchmark)
 
 
 ## Install
 
 ```
 npm install json-schema-consolidate
+npm install <validator>
 ```
 
-json-schema-consolidate will not install any validators - you have to install the validator(s) that you use separately (so you don't have to update this package when you want to update validator).
+json-schema-consolidate will not install any validators - you have to install the validator(s) that you use separately.
 
 
 ## Usage
@@ -106,16 +109,18 @@ Validator specific options can also be passed.
 
 ### Compiling:
 
-__is-my-json-valid__ - functions in custom formats not not supported
+__is-my-json-valid__ - not supported: functions in custom formats, full URIs in schema ids.
+
+__z-schema__ - custom formats are registered globally, not in the instance. Schema ids must be full valid URIs.
 
 
 ### Interpreting:
 
-__jjv__ - options `allErrors` and `verbose` not supported. "Compiling" schema registers it (`addSchema`) if `schema.id` is present.
+__jjv__ - option `allErrors` not supported. "Compiling" schema registers it (`addSchema`) if `schema.id` is present.
 
-__skeemas__ - not supported: custom formats, `verbose`.
+__skeemas__ - not supported: custom formats.
 
-__tv4__ - not supported: `verbose`.
+__tv4__ - supports all options.
 
 
 ## Running tests
@@ -133,20 +138,9 @@ Then you can run tests with `./test` script:
 
 ```
 ./test
-```
-
-or
-
-
-```
 ./test --full
-```
-
-or
-
-
-```
-test is-my-json-valid
+./test <validator>
+./test <validator> --short
 ```
 
 

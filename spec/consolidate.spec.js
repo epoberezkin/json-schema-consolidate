@@ -4,15 +4,16 @@ var consolidate = require('../index')
   , assert = require('assert');
 
 var VALIDATOR = process.env.JSC_VALIDATOR;
-var validators = VALIDATOR ? [VALIDATOR] : [
-  "is-my-json-valid",
-  "jjv",
-  "skeemas",
-  "tv4"
-];
 
-var SCHEMA1, VALID1, INVALID1, SCHEMA2, VALID2, INVALID2, SCHEMA3, VALID3, INVALID3;
-createTestSchemas();
+var VALIDATORS = {
+  "is-my-json-valid": { fullUris: false },
+  "jjv":              { fullUris: true },
+  "skeemas":          { fullUris: true, customFormats: false },
+  "tv4":              { fullUris: true },
+  "z-schema":         { fullUris: true }
+}
+
+var validators = VALIDATOR ? [VALIDATOR] : Object.keys(VALIDATORS);
 
 
 validators.forEach(describeConsolidate);
@@ -20,10 +21,13 @@ validators.forEach(describeConsolidate);
 
 function describeConsolidate(validatorName) {
   describe('consolidate with ' + validatorName, function() {
+    var SCHEMA1, VALID1, INVALID1, SCHEMA2, VALID2, INVALID2, SCHEMA3, VALID3, INVALID3;
     var Validator;
 
     before(function() {
       Validator = consolidate(validatorName);
+      var uriHost = VALIDATORS[validatorName].fullUris ? 'http://example.com/' : '';
+      createTestSchemas(uriHost);
     });
 
     it('should create Validator instance', function() {
@@ -76,20 +80,25 @@ function describeConsolidate(validatorName) {
       });
 
       it('should add schema via options', function() {
-        validator = new Validator({schemas: {'/schema1': SCHEMA1}});
+        var schemas = {};
+        schemas[SCHEMA1.id] = SCHEMA1;
+        validator = new Validator({schemas: schemas});
         assertGetSchema();
         assertValid(validator.validate(SCHEMA2, VALID2));
         assertInvalid(validator.validate(SCHEMA2, INVALID2));
       });
 
       it('should add stringified schema via options', function() {
-        validator = new Validator({schemas: {'/schema1': JSON.stringify(SCHEMA1)}});
+        var schemas = {};
+        schemas[SCHEMA1.id] = JSON.stringify(SCHEMA1);
+        validator = new Validator({schemas: schemas});
         assertGetSchema();
         assertValid(validator.validate(SCHEMA2, VALID2));
         assertInvalid(validator.validate(SCHEMA2, INVALID2));
       });
 
-      (validatorName == 'skeemas' ? it.skip : it)
+      var skipCustomFormats = VALIDATORS[validatorName].customFormats === false;
+      (skipCustomFormats ? it.skip : it)
       ('should add custom regexp format via options', function() {
         validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/i}});
         assertValid(validator.validate(SCHEMA3, VALID3));
@@ -110,45 +119,45 @@ function describeConsolidate(validatorName) {
         assert.deepEqual(validator.getSchema(SCHEMA1.id), SCHEMA1);
       }
     });
+
+
+    function createTestSchemas(uriHost) {
+      SCHEMA1 = {
+        id: uriHost + 'schema1',
+        type: 'object',
+        properties: {
+          s: { type: 'string' },
+          n: { type: 'number' }
+        },
+        required: ['s']
+      };
+
+
+      VALID1 = { s: 'test', n: 1 };
+      INVALID1 = { s: 1, n: 'test' };
+
+      SCHEMA2 = {
+        id: uriHost + 'schema2',
+        type: 'array',
+        items: {'$ref': uriHost + 'schema1'},
+        additionalItems: false
+      };
+
+      VALID2 = [{s: 'test'}];
+      INVALID2 = [{n: 1}, {s: 'test', n: 2}];
+
+
+      SCHEMA3 = {
+        id: uriHost + 'schema3',
+        type: 'object',
+        properties: {
+          x: { type: 'string', format: 'my_identifier' },
+        },
+        required: ['x']
+      };
+
+      VALID3 = { x: 'Xyz1' };
+      INVALID3 = { x: '1xyz' };
+    }
   });
-}
-
-
-function createTestSchemas() {
-  SCHEMA1 = {
-    id: '/schema1',
-    type: 'object',
-    properties: {
-      s: { type: 'string' },
-      n: { type: 'number' }
-    },
-    required: ['s']
-  };
-
-
-  VALID1 = { s: 'test', n: 1 };
-  INVALID1 = { s: 1, n: 'test' };
-
-  SCHEMA2 = {
-    id: '/schema2',
-    type: 'array',
-    items: {'$ref': '/schema1'},
-    additionalItems: false
-  };
-
-  VALID2 = [{s: 'test'}];
-  INVALID2 = [{n: 1}, {s: 'test', n: 2}];
-
-
-  SCHEMA3 = {
-    id: '/schema3',
-    type: 'object',
-    properties: {
-      x: { type: 'string', format: 'my_identifier' },
-    },
-    required: ['x']
-  };
-
-  VALID3 = { x: 'Xyz1' };
-  INVALID3 = { x: '1xyz' };
 }

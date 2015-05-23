@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 validator=$1
+short=$2
 
-VALIDATORS=( "is-my-json-valid" "jjv" "skeemas" "tv4" )
+VALIDATORS=( "is-my-json-valid" "jjv" "skeemas" "tv4" "z-schema" )
 
 function mocha_test()
 {
@@ -14,23 +15,25 @@ function mocha_test()
 function schema_test()
 {
     local validator=$1
+    local short=$2
     sed -e "s/\${VALIDATOR}/$validator/" spec/adapter.template.js > spec/adapter.js
-    json-schema-tests "spec/adapter.js"
-    rm spec/adapter.js
+    local results=$(json-schema-tests "spec/adapter.js")
+    if [[ $short == "true" ]]; then
+        echo "${validator}: $(echo "$results" | grep -i 'passed')"
+    else
+        echo $'\n\n'"Testing ${validator}"$'\n'
+        echo "$results"
+    fi
 }
 
 if [[ $validator == "" || $validator == "--full" ]]; then
     mocha_test
+    [[ "$validator" == "--full" ]] && short="" || short="true"
     for val in "${VALIDATORS[@]}"; do
-        results=$(schema_test $val)
-        if [[ $validator == "--full" ]]; then
-            echo $'\n\n'"Testing ${val}"$'\n'
-            echo "$results"
-        else
-            echo "${val}: $(echo "$results" | grep -i 'passed')"
-        fi
+        schema_test $val $short
     done
 else
     mocha_test $validator
-    schema_test $validator
+    [[ "$short" == "--short" ]] && short="true" || short=""
+    schema_test $validator $short
 fi

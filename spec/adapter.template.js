@@ -1,7 +1,7 @@
 'use strict';
 
 var consolidate = require('../index');
-var validator = consolidate('${VALIDATOR}', { allErrors: true, verbose: true });
+var validator = consolidate('${VALIDATOR}', { allErrors: true });
 // test script replaces ${VALIDATOR} above with validator names
 
 module.exports = {
