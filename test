@@ -4,17 +4,25 @@ validator=$1
 
 VALIDATORS=( "is-my-json-valid" "jjv" "tv4" )
 
-function mocha_tests()
+function mocha_test()
 {
     export JSC_VALIDATOR=$1
     ./node_modules/.bin/mocha --reporter=spec spec/*.spec.js
     export JSC_VALIDATOR=""
 }
 
+function schema_test()
+{
+    local validator=$1
+    sed -e "s/\${VALIDATOR}/$validator/" spec/adapter.template.js > spec/adapter.js
+    json-schema-tests "spec/adapter.js"
+    rm spec/adapter.js
+}
+
 if [[ $validator == "" || $validator == "--full" ]]; then
-    mocha_tests
+    mocha_test
     for val in "${VALIDATORS[@]}"; do
-        results=$(json-schema-tests "spec/adapter/$val.js")
+        results=$(schema_test $val)
         if [[ $validator == "--full" ]]; then
             echo $'\n\n'"Testing ${val}"$'\n'
             echo "$results"
@@ -23,6 +31,6 @@ if [[ $validator == "" || $validator == "--full" ]]; then
         fi
     done
 else
-    mocha_tests $validator
-    json-schema-tests "spec/adapter/$validator.js"
+    mocha_test $validator
+    schema_test $validator
 fi

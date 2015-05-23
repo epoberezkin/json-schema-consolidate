@@ -10,42 +10,8 @@ var validators = VALIDATOR ? [VALIDATOR] : [
   "tv4"
 ];
 
-var SCHEMA1 = {
-  id: 'schema1',
-  type: 'object',
-  properties: {
-    s: { type: 'string' },
-    n: { type: 'number' }
-  },
-  required: ['s']
-};
-
-
-var VALID1 = { s: 'test', n: 1 };
-var INVALID1 = { s: 1, n: 'test' };
-
-var SCHEMA2 = {
-  id: 'schema2',
-  type: 'array',
-  items: {'$ref': 'schema1'},
-  additionalItems: false
-};
-
-var VALID2 = [{s: 'test'}];
-var INVALID2 = [{n: 1}, {s: 'test', n: 2}];
-
-
-var SCHEMA3 = {
-  id: 'schema1',
-  type: 'object',
-  properties: {
-    x: { type: 'string', format: 'my_identifier' },
-  },
-  required: ['x']
-};
-
-var VALID3 = { x: 'Xyz1' };
-var INVALID3 = { x: '1xyz' };
+var SCHEMA1, VALID1, INVALID1, SCHEMA2, VALID2, INVALID2, SCHEMA3, VALID3, INVALID3;
+createTestSchemas();
 
 
 validators.forEach(describeConsolidate);
@@ -142,4 +108,44 @@ function describeConsolidate(validatorName) {
       }
     });
   });
+}
+
+
+function createTestSchemas() {
+  SCHEMA1 = {
+    id: 'schema1',
+    type: 'object',
+    properties: {
+      s: { type: 'string' },
+      n: { type: 'number' }
+    },
+    required: ['s']
+  };
+
+
+  VALID1 = { s: 'test', n: 1 };
+  INVALID1 = { s: 1, n: 'test' };
+
+  SCHEMA2 = {
+    id: 'schema2',
+    type: 'array',
+    items: {'$ref': 'schema1'},
+    additionalItems: false
+  };
+
+  VALID2 = [{s: 'test'}];
+  INVALID2 = [{n: 1}, {s: 'test', n: 2}];
+
+
+  SCHEMA3 = {
+    id: 'schema1',
+    type: 'object',
+    properties: {
+      x: { type: 'string', format: 'my_identifier' },
+    },
+    required: ['x']
+  };
+
+  VALID3 = { x: 'Xyz1' };
+  INVALID3 = { x: '1xyz' };
 }
