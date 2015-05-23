@@ -106,16 +106,18 @@ Validator specific options can also be passed.
 
 ## Validators compatibility
 
-|validator|addSchema|allErrors|formats|compile|
-|---------|:-------:|:-------:|:-----:|:-----:|
-|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|short|-|+|+|
-|[jjv](https://github.com/acornejo/jjv)|+|-|+|-|
-|[jsen](https://github.com/bugventure/jsen)|-|-|+|+|
-|[jsonschema](https://github.com/tdegrunt/jsonschema)|full|+|-|-|
-|[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|RegExp|-|
-|[skeemas](https://github.com/Prestaul/skeemas)|full|-|-|-|
-|[tv4](https://github.com/geraintluff/tv4)|+|+|+|-|
-|[z-schema](https://github.com/zaggino/z-schema)|+|+|+|-|
+|validator|validate schema|addSchema|allErrors|formats|compile|
+|---------|:-------------:|:-------:|:-------:|:-----:|:-----:|
+|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|-*|short|-|+|+|
+|[jjv](https://github.com/acornejo/jjv)|-*|+|-|+|-|
+|[jsen](https://github.com/bugventure/jsen)|-*|-|-|+|+|
+|[jsonschema](https://github.com/tdegrunt/jsonschema)|-*|full|+|-|-|
+|[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|-|RegExp|-|
+|[skeemas](https://github.com/Prestaul/skeemas)|-*|full|-|-|-|
+|[tv4](https://github.com/geraintluff/tv4)|-*|+|+|+|-|
+|[z-schema](https://github.com/zaggino/z-schema)|+|+|+|+|-|
+
+- `validate schema`: validator can _correctly_ validate schema against meta_schema. Some validators completely fail (`-`), some validate invalid schema as valid (`-*`) in the test.
 
 - `addSchema`: support for referencing schemas in other files. Some validators support only `full` uris, some only `short` uris and some support both (`+`). [jsen](https://github.com/bugventure/jsen) doesn't seem to support referencing schemas in other files.
 
@@ -145,6 +147,8 @@ Then you can run tests with `./test` script:
 ./test <validator>
 ./test <validator> --short
 ```
+
+Skipped tests are either not implemented or failing features in validators.
 
 
 ## License
