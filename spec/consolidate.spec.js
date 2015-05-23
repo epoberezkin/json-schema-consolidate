@@ -7,17 +7,18 @@ var consolidate = require('../index')
 var VALIDATOR = process.env.JSC_VALIDATOR;
 
 // Not/partially supported features
+// uris can be both full and short if not specified, short uris are used in the test in this case
 var VALIDATORS = {
-  'is-my-json-valid': { validateSchema: false,                   fullUris: false, allErrors: false },
-  'jjv':              { validateSchema: false,                                    allErrors: false },
-  'jsen':             { validateSchema: false, addSchema: false,                  allErrors: false },
-  'jsonschema':       { validateSchema: false,                   fullUris: true,                    customFormats: false },
-  'schemasaurus':     { validateSchema: false, addSchema: false,                  allErrors: false, customFormats: RegExp },
-  'skeemas':          { validateSchema: false,                   fullUris: true,  allErrors: false, customFormats: false },
-  'tv4':              { validateSchema: false },
+  'is-my-json-valid': { metaSchema: 'valid',                   fullUris: false, allErrors: false },
+  'jjv':              { metaSchema: 'valid',                                    allErrors: false },
+  'jsen':             { metaSchema: 'valid', addSchema: false,                  allErrors: false },
+  'jsonschema':       { metaSchema: 'valid',                   fullUris: true,                    customFormats: false },
+  'schemasaurus':     { metaSchema: 'valid', addSchema: false,                  allErrors: false, customFormats: RegExp },
+  'skeemas':          { metaSchema: 'valid',                   fullUris: true,  allErrors: false, customFormats: false },
+  'themis':           { metaSchema: 'valid',                                    allErrors: false },
+  'tv4':              { metaSchema: 'valid' },
   'z-schema':         { }
-}
-// uris can be full and short if not specified
+};
 
 var validators = VALIDATOR ? [VALIDATOR] : Object.keys(VALIDATORS);
 
@@ -48,10 +49,16 @@ function describeConsolidate(validatorName) {
         validator = new Validator;
       });
 
-      var skipValidateSchema = VALIDATORS[validatorName].validateSchema === false;
+      var metaSchema = VALIDATORS[validatorName].metaSchema;
+      var skipValidateSchema = metaSchema === false;
       (skipValidateSchema ? it.skip : it)
-      ('should validate schema against metaschema', function() {
+      ('should validate valid schema against metaschema', function() {
         assertValid(validator.validate(VALID[0], META_SCHEMA));
+      });
+
+      var skipValidateInvalidSchema = skipValidateSchema || metaSchema == 'valid';
+      (skipValidateInvalidSchema ? it.skip : it)
+      ('should correctly validate INVALID schema against metaschema', function() {
         assertInvalid(validator.validate(INVALID[0], META_SCHEMA));
       });
 
@@ -127,12 +134,12 @@ function describeConsolidate(validatorName) {
       var skipFuncFormats = skipCustomFormats || customFormats == RegExp;
       (skipFuncFormats ? it.skip : it)
       ('should support custom function format via options', function() {
-        validator = new Validator({formats: {my_identifier: my_identifier}});
-        assertValid(validator.validate(SCHEMA[3], VALID[3]));
-        assertInvalid(validator.validate(SCHEMA[3], INVALID[3]));
+        validator = new Validator({formats: {palindrome: palindrome}});
+        assertValid(validator.validate(SCHEMA[4], VALID[4]));
+        assertInvalid(validator.validate(SCHEMA[4], INVALID[4]));
 
-        function my_identifier(str) {
-          return /^[a-z][a-z0-9_]*$/i.test(str);
+        function palindrome(str) {
+          return !str || str == str.split('').reverse().join('');
         }
       });
 
@@ -140,10 +147,10 @@ function describeConsolidate(validatorName) {
       (skipAllErrors ? it.skip : it)
       ('should support allErrors option', function() {
         var validatorAll = new Validator({allErrors: true});
-        assertValid(validator.validate(SCHEMA[4], VALID[4]));
-        assertValid(validatorAll.validate(SCHEMA[4], VALID[4]));
-        var result = validator.validate(SCHEMA[4], INVALID[4]);
-        var resultAll = validatorAll.validate(SCHEMA[4], INVALID[4]);
+        assertValid(validator.validate(SCHEMA[5], VALID[5]));
+        assertValid(validatorAll.validate(SCHEMA[5], VALID[5]));
+        var result = validator.validate(SCHEMA[5], INVALID[5]);
+        var resultAll = validatorAll.validate(SCHEMA[5], INVALID[5]);
         assert.equal(result.valid, false);
         assert.equal(resultAll.valid, false);
         // console.log('*   one', result.errors);
@@ -173,7 +180,7 @@ function describeConsolidate(validatorName) {
       SCHEMA = []; VALID = []; INVALID = [];
 
       VALID[0] = {
-        id: uriHost + 'schema0a',
+        id: uriHost + 'schema0a#',
         $schema: 'http://json-schema.org/draft-04/schema#',
         type: 'object',
         properties: {
@@ -183,7 +190,7 @@ function describeConsolidate(validatorName) {
       };
 
       INVALID[0] = {
-        id: uriHost + 'schema0b',
+        id: uriHost + 'schema0b#',
         $schema: 'http://json-schema.org/draft-04/schema#',
         type: 'object',
         properties: [
@@ -235,6 +242,20 @@ function describeConsolidate(validatorName) {
 
 
       SCHEMA[4] = {
+        id: uriHost + 'schema3',
+        $schema: 'http://json-schema.org/draft-04/schema#',
+        type: 'object',
+        properties: {
+          x: { type: 'string', format: 'palindrome' },
+        },
+        required: ['x']
+      };
+
+      VALID[4] = { x: 'abba' };
+      INVALID[4] = { x: 'abbac' };
+
+
+      SCHEMA[5] = {
         id: uriHost + 'schema4',
         $schema: 'http://json-schema.org/draft-04/schema#',
         type: 'object',
@@ -252,8 +273,8 @@ function describeConsolidate(validatorName) {
         required: ['obj']
       };
 
-      VALID[4] = { obj: { s: 'valid', n: 1 }, n: 2 };
-      INVALID[4] = { obj: { s: 'invalid', n: 'invalid1' }, n: 'invalid2' };
+      VALID[5] = { obj: { s: 'valid', n: 1 }, n: 2 };
+      INVALID[5] = { obj: { s: 'invalid', n: 'invalid1' }, n: 'invalid2' };
     }
   });
 }

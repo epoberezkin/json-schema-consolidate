@@ -11,6 +11,7 @@ Unified interface to different JSON-schema validators
 - [jsonschema](https://github.com/tdegrunt/jsonschema)
 - [schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)
 - [skeemas](https://github.com/Prestaul/skeemas)
+- [themis](https://github.com/playlyfe/themis)
 - [tv4](https://github.com/geraintluff/tv4)
 - [z-schema](https://github.com/zaggino/z-schema#register-a-custom-format)
 
@@ -106,18 +107,19 @@ Validator specific options can also be passed.
 
 ## Validators compatibility
 
-|validator|validate schema|addSchema|allErrors|formats|compile|
+|validator|meta-schema|addSchema|allErrors|formats|compile|
 |---------|:-------------:|:-------:|:-------:|:-----:|:-----:|
-|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|-*|short|-|+|+|
-|[jjv](https://github.com/acornejo/jjv)|-*|+|-|+|-|
-|[jsen](https://github.com/bugventure/jsen)|-*|-|-|+|+|
-|[jsonschema](https://github.com/tdegrunt/jsonschema)|-*|full|+|-|-|
+|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|-|short|-|&#x2713;|&#x2713;|
+|[jjv](https://github.com/acornejo/jjv)|-|&#x2713;|-|&#x2713;|-|
+|[jsen](https://github.com/bugventure/jsen)|-|-|-|&#x2713;|&#x2713;|
+|[jsonschema](https://github.com/tdegrunt/jsonschema)|-|full|&#x2713;|-|-|
 |[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|-|RegExp|-|
-|[skeemas](https://github.com/Prestaul/skeemas)|-*|full|-|-|-|
-|[tv4](https://github.com/geraintluff/tv4)|-*|+|+|+|-|
-|[z-schema](https://github.com/zaggino/z-schema)|+|+|+|+|-|
+|[skeemas](https://github.com/Prestaul/skeemas)|-|full|-|-|-|
+|[themis](https://github.com/playlyfe/themis)|-|&#x2713;|-|&#x2713;|&#x2713;|
+|[tv4](https://github.com/geraintluff/tv4)|-|&#x2713;|&#x2713;|&#x2713;|-|
+|[z-schema](https://github.com/zaggino/z-schema)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-|
 
-- `validate schema`: validator can _correctly_ validate schema against meta_schema. Some validators completely fail (`-`), some validate invalid schema as valid (`-*`) in the test.
+- `meta-schema`: validator can _correctly_ validate schema against [meta-schema](http://json-schema.org/documentation.html). Most validators validate invalid schema as valid in the test.
 
 - `addSchema`: support for referencing schemas in other files. Some validators support only `full` uris, some only `short` uris and some support both (`+`). [jsen](https://github.com/bugventure/jsen) doesn't seem to support referencing schemas in other files.
 

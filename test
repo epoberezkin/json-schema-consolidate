@@ -10,14 +10,23 @@ VALIDATORS=(
     "jsonschema"
     "schemasaurus"
     "skeemas"
+    "themis"
     "tv4"
     "z-schema"
 )
 
 function mocha_test()
 {
-    export JSC_VALIDATOR=$1
-    ./node_modules/.bin/mocha --reporter=spec spec/*.spec.js
+    local validator=$1
+    local short=$2
+    [[ "$short" == "true" ]] && reporter="min" || reporter="spec"
+    export JSC_VALIDATOR=$validator
+    local results=$(./node_modules/.bin/mocha --colors --reporter=$reporter spec/*.spec.js)
+    if [[ $reporter == "min" ]]; then
+        echo "$validator:" $(echo "$results" | grep "passing\|failing\|pending")
+    else
+        echo "$results"
+    fi
     export JSC_VALIDATOR=""
 }
 
@@ -28,7 +37,7 @@ function schema_test()
     sed -e "s/\${VALIDATOR}/$validator/" spec/adapter.template.js > spec/adapter.js
     local results=$(json-schema-tests "spec/adapter.js")
     if [[ $short == "true" ]]; then
-        echo "${validator}: $(echo "$results" | grep -i 'passed')"
+        echo "$validator: $(echo "$results" | grep -i 'passed')"
     else
         echo $'\n\n'"Testing ${validator}"$'\n'
         echo "$results"
@@ -36,13 +45,21 @@ function schema_test()
 }
 
 if [[ $validator == "" || $validator == "--full" ]]; then
-    mocha_test
     [[ "$validator" == "--full" ]] && short="" || short="true"
+    echo $'\nconsolidate interface:'
+    for val in "${VALIDATORS[@]}"; do
+        mocha_test $val $short
+    done
+
+    echo $'\njson-schema suite:'
     for val in "${VALIDATORS[@]}"; do
         schema_test $val $short
     done
 else
-    mocha_test $validator
     [[ "$short" == "--short" ]] && short="true" || short=""
+    echo $'\nconsolidate interface:'
+    mocha_test $validator
+
+    echo $'\njson-schema suite:'
     schema_test $validator $short
 fi
