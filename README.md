@@ -105,23 +105,23 @@ Validator specific options can also be passed.
 
 ## Validators compatibility
 
-|validator|addSchema uri|allErrors|formats|compiles|
-|---------|:-----------:|:-------:|:-----:|:------:|
+|validator|addSchema|allErrors|formats|compile|
+|---------|:-------:|:-------:|:-----:|:-----:|
 |[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|short|-|RegExp|+|
 |[jjv](https://github.com/acornejo/jjv)|+|-|+|-|
-|[jsen](https://github.com/bugventure/jsen)|-|-|+*|+|
+|[jsen](https://github.com/bugventure/jsen)|-|-|+|+|
 |[jsonschema](https://github.com/tdegrunt/jsonschema)|full|+|-|-|
 |[skeemas](https://github.com/Prestaul/skeemas)|full|-|-|-|
 |[tv4](https://github.com/geraintluff/tv4)|+|+|+|-|
-|[z-schema](https://github.com/zaggino/z-schema)|+|+|+|?|
+|[z-schema](https://github.com/zaggino/z-schema)|+|+|+|-|
 
-- `addSchema` uri: support for referencing schemas in other files. Some validators support only `full` uri, some only `short` uris and some suppot both (`+`). [jsen](https://github.com/bugventure/jsen) doesn't seem to support referencing schemas in other files.
+- `addSchema`: support for referencing schemas in other files. Some validators support only `full` uris, some only `short` uris and some support both (`+`). [jsen](https://github.com/bugventure/jsen) doesn't seem to support referencing schemas in other files.
 
-- `allErrors` option: if supported, the validator will stop after the first error unless this options is set to true.
+- `allErrors`: if supported, the validator will stop after the first error unless this options is set to true.
 
-- custom `formats`: most validators support functions and RegExp (some only with this package) as custom formats (`+`). Some support only `RegExp`. [jsen](https://github.com/bugventure/jsen) ignores flags in RegExp.
+- `formats`: most validators support functions and RegExp (some only with this package) as custom formats (`+`). Some support only `RegExp`.
 
-- `compiles`: validators that compile schemas into code.
+- `compile`: validators that compile schemas into validating functions. Even if a validator doesn't compile schemas, you can use `compile` method - it will return a closure that will validate using the passed schema.
 
 
 ## Running tests

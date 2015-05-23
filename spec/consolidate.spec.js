@@ -108,7 +108,7 @@ function describeConsolidate(validatorName) {
       var skipCustomFormats = VALIDATORS[validatorName].customFormats === false;
       (skipCustomFormats ? it.skip : it)
       ('should add custom regexp format via options', function() {
-        validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/}});
+        validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/i}});
         assertValid(validator.validate(SCHEMA[3], VALID[3]));
         assertInvalid(validator.validate(SCHEMA[3], INVALID[3]));
       });
@@ -183,7 +183,7 @@ function describeConsolidate(validatorName) {
         required: ['x']
       };
 
-      VALID[3] = { x: 'xyz1' };
+      VALID[3] = { x: 'Xyz1' };
       INVALID[3] = { x: '1xyz' };
 
 
