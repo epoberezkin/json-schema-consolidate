@@ -8,6 +8,7 @@ var VALIDATOR = process.env.JSC_VALIDATOR;
 var VALIDATORS = {
   "is-my-json-valid": { fullUris: false, allErrors: false },
   "jjv":              { allErrors: false },
+  "jsen":             { addSchema: false, allErrors: false },
   "jsonschema":       { fullUris: true, customFormats: false },
   "skeemas":          { fullUris: true, customFormats: false, allErrors: false },
   "tv4":              { },
@@ -67,21 +68,25 @@ function describeConsolidate(validatorName) {
         assertInvalid(validate(INVALID[1]));
       });
 
-      it('should add schema with "addSchema"', function() {
+      var skipAddSchema = VALIDATORS[validatorName].addSchema === false;
+      (skipAddSchema ? it.skip : it)
+      ('should add schema with "addSchema"', function() {
         validator.addSchema(SCHEMA[1]);
         assertGetSchema();
         assertValid(validator.validate(SCHEMA[2], VALID[2]));
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      it('should add stringified schema with "addSchema"', function() {
+      (skipAddSchema ? it.skip : it)
+      ('should add stringified schema with "addSchema"', function() {
         validator.addSchema(JSON.stringify(SCHEMA[1]));
         assertGetSchema();
         assertValid(validator.validate(SCHEMA[2], VALID[2]));
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      it('should add schema via options', function() {
+      (skipAddSchema ? it.skip : it)
+      ('should add schema via options', function() {
         var schemas = {};
         schemas[SCHEMA[1].id] = SCHEMA[1];
         validator = new Validator({schemas: schemas});
@@ -90,7 +95,8 @@ function describeConsolidate(validatorName) {
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      it('should add stringified schema via options', function() {
+      (skipAddSchema ? it.skip : it)
+      ('should add stringified schema via options', function() {
         var schemas = {};
         schemas[SCHEMA[1].id] = JSON.stringify(SCHEMA[1]);
         validator = new Validator({schemas: schemas});
@@ -102,7 +108,7 @@ function describeConsolidate(validatorName) {
       var skipCustomFormats = VALIDATORS[validatorName].customFormats === false;
       (skipCustomFormats ? it.skip : it)
       ('should add custom regexp format via options', function() {
-        validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/i}});
+        validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/}});
         assertValid(validator.validate(SCHEMA[3], VALID[3]));
         assertInvalid(validator.validate(SCHEMA[3], INVALID[3]));
       });
@@ -123,11 +129,13 @@ function describeConsolidate(validatorName) {
       });
 
       function assertValid(result) {
+        // console.log(result);
         assert(result.valid)
         assert.deepEqual(result.errors, []);
       }
 
       function assertInvalid(result) {
+        // console.log(result);
         assert.equal(result.valid, false);
         assert(Object.keys(result.errors).length >= 1);
       }
@@ -175,7 +183,7 @@ function describeConsolidate(validatorName) {
         required: ['x']
       };
 
-      VALID[3] = { x: 'Xyz1' };
+      VALID[3] = { x: 'xyz1' };
       INVALID[3] = { x: '1xyz' };
 
 

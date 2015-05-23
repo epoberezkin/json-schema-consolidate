@@ -1,16 +1,17 @@
 # json-schema-consolidate
 
-Unified api to different JSON-schema validators
+Unified interface to different JSON-schema validators
 
 
 ## Supported validators
 
 - [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
 - [jjv](https://github.com/acornejo/jjv)
+- [jsen](https://github.com/bugventure/jsen)
+- [jsonschema](https://github.com/tdegrunt/jsonschema)
 - [skeemas](https://github.com/Prestaul/skeemas)
 - [tv4](https://github.com/geraintluff/tv4)
 - [z-schema](https://github.com/zaggino/z-schema#register-a-custom-format)
-- [jsonschema](https://github.com/tdegrunt/jsonschema)
 
 You must install the validator(s) you use separately.
 
@@ -104,22 +105,23 @@ Validator specific options can also be passed.
 
 ## Validators compatibility
 
-### Compiling:
+|validator|addSchema uri|allErrors|formats|compiles|
+|---------|:-----------:|:-------:|:-----:|:------:|
+|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|short|-|RegExp|+|
+|[jjv](https://github.com/acornejo/jjv)|+|-|+|-|
+|[jsen](https://github.com/bugventure/jsen)|-|-|+*|+|
+|[jsonschema](https://github.com/tdegrunt/jsonschema)|full|+|-|-|
+|[skeemas](https://github.com/Prestaul/skeemas)|full|-|-|-|
+|[tv4](https://github.com/geraintluff/tv4)|+|+|+|-|
+|[z-schema](https://github.com/zaggino/z-schema)|+|+|+|?|
 
-__is-my-json-valid__ - not supported: functions in custom formats, full URIs in schema ids.
+- `addSchema` uri: support for referencing schemas in other files. Some validators support only `full` uri, some only `short` uris and some suppot both (`+`). [jsen](https://github.com/bugventure/jsen) doesn't seem to support referencing schemas in other files.
 
-__z-schema__ - custom formats are registered globally, not in the instance. Schema ids must be full valid URIs.
+- `allErrors` option: if supported, the validator will stop after the first error unless this options is set to true.
 
+- custom `formats`: most validators support functions and RegExp (some only with this package) as custom formats (`+`). Some support only `RegExp`. [jsen](https://github.com/bugventure/jsen) ignores flags in RegExp.
 
-### Interpreting:
-
-__jjv__ - option `allErrors` not supported. "Compiling" schema registers it (`addSchema`) if `schema.id` is present.
-
-__jsonschema__ - not supported: custom formats. Schema ids must be full valid URIs.
-
-__skeemas__ - not supported: custom formats.
-
-__tv4__ - supports all options.
+- `compiles`: validators that compile schemas into code.
 
 
 ## Running tests
