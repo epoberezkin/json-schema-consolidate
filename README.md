@@ -10,6 +10,7 @@ Unified api to different JSON-schema validators
 - [skeemas](https://github.com/Prestaul/skeemas)
 - [tv4](https://github.com/geraintluff/tv4)
 - [z-schema](https://github.com/zaggino/z-schema#register-a-custom-format)
+- [jsonschema](https://github.com/tdegrunt/jsonschema)
 
 You must install the validator(s) you use separately.
 
@@ -113,6 +114,8 @@ __z-schema__ - custom formats are registered globally, not in the instance. Sche
 ### Interpreting:
 
 __jjv__ - option `allErrors` not supported. "Compiling" schema registers it (`addSchema`) if `schema.id` is present.
+
+__jsonschema__ - not supported: custom formats. Schema ids must be full valid URIs.
 
 __skeemas__ - not supported: custom formats.
 
