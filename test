@@ -4,7 +4,15 @@ validator=$1
 
 VALIDATORS=( "is-my-json-valid" "jjv" "tv4" )
 
+function mocha_tests()
+{
+    export JSC_VALIDATOR=$1
+    ./node_modules/.bin/mocha --reporter=spec spec/*.spec.js
+    export JSC_VALIDATOR=""
+}
+
 if [[ $validator == "" || $validator == "--full" ]]; then
+    mocha_tests
     for val in "${VALIDATORS[@]}"; do
         results=$(json-schema-tests "spec/adapter/$val.js")
         if [[ $validator == "--full" ]]; then
@@ -15,5 +23,6 @@ if [[ $validator == "" || $validator == "--full" ]]; then
         fi
     done
 else
+    mocha_tests $validator
     json-schema-tests "spec/adapter/$validator.js"
 fi

@@ -47,6 +47,8 @@ var result = validator.validate(schema, json); // { valid: true/false, errors: [
 
 If you need to validate with the previously added schema, you can either use `getSchema` to retrieve it or pass `{ $ref: '<id>' }` as the schema.
 
+If the referenced schema is missing it is an error (for all validators - tv4 is corrected in this case).
+
 For compiling validators, this method will cache compiled schemas using serialized schema as a key ([json-stable-stringify](https://github.com/substack/json-stable-stringify) is used).
 
 
