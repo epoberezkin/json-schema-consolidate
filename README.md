@@ -11,9 +11,9 @@ Unified api to different JSON-schema validators
 - [tv4](https://github.com/geraintluff/tv4)
 - [z-schema](https://github.com/zaggino/z-schema#register-a-custom-format)
 
-You must install the validators you use separately.
+You must install the validator(s) you use separately.
 
-See Validators compatibility and [json-schema-benchmark](https://github.com/ebdrup/json-schema-benchmark)
+See [Validators compatibility](https://github.com/epoberezkin/json-schema-consolidate#validators-compatibility) and [json-schema-benchmark](https://github.com/ebdrup/json-schema-benchmark).
 
 
 ## Install
@@ -23,14 +23,12 @@ npm install json-schema-consolidate
 npm install <validator>
 ```
 
-json-schema-consolidate will not install any validators - you have to install the validator(s) that you use separately.
-
 
 ## Usage
 
 ```
 var consolidate = require('json-schema-consolidate');
-var Validator = consolidate('is-my-json-valid');
+var Validator = consolidate('<validator>');
 var validator = new Validator(options); // or Validator(options);
 ```
 
@@ -38,7 +36,7 @@ or
 
 ```
 var consolidate = require('json-schema-consolidate');
-var validator = consolidate('is-my-json-valid', options);
+var validator = consolidate('<validator>', options);
 ```
 
 
@@ -95,11 +93,9 @@ These options are available in all supported validators:
 
 - allErrors - continue validation after errors and return all validation errors
 
-- verbose - validator dependent
-
 - schemas - include some schemas, same result as calling `addSchema` method
 
-- formats - define additional formats, all validators support RegExp, most support functions.
+- formats - define additional formats, most validators support RegExp and functions
 
 
 Validator specific options can also be passed.

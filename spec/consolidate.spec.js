@@ -6,12 +6,14 @@ var consolidate = require('../index')
 var VALIDATOR = process.env.JSC_VALIDATOR;
 
 var VALIDATORS = {
-  "is-my-json-valid": { fullUris: false },
-  "jjv":              { fullUris: true },
-  "skeemas":          { fullUris: true, customFormats: false },
-  "tv4":              { fullUris: true },
-  "z-schema":         { fullUris: true }
+  "is-my-json-valid": { fullUris: false, allErrors: false },
+  "jjv":              { allErrors: false },
+  "jsonschema":       { fullUris: true, customFormats: false },
+  "skeemas":          { fullUris: true, customFormats: false, allErrors: false },
+  "tv4":              { },
+  "z-schema":         { }
 }
+// uris can be full and short if not specified
 
 var validators = VALIDATOR ? [VALIDATOR] : Object.keys(VALIDATORS);
 
@@ -21,7 +23,7 @@ validators.forEach(describeConsolidate);
 
 function describeConsolidate(validatorName) {
   describe('consolidate with ' + validatorName, function() {
-    var SCHEMA1, VALID1, INVALID1, SCHEMA2, VALID2, INVALID2, SCHEMA3, VALID3, INVALID3;
+    var SCHEMA, VALID, INVALID;
     var Validator;
 
     before(function() {
@@ -43,66 +45,81 @@ function describeConsolidate(validatorName) {
       });
 
       it('should validate json against schema', function() {
-        assertValid(validator.validate(SCHEMA1, VALID1));
-        assertInvalid(validator.validate(SCHEMA1, INVALID1));
+        assertValid(validator.validate(SCHEMA[1], VALID[1]));
+        assertInvalid(validator.validate(SCHEMA[1], INVALID[1]));
       });
 
       it('should validate json against stringified schema', function() {
-        var schema = JSON.stringify(SCHEMA1);
-        assertValid(validator.validate(schema, VALID1));
-        assertInvalid(validator.validate(schema, INVALID1));
+        var schema = JSON.stringify(SCHEMA[1]);
+        assertValid(validator.validate(schema, VALID[1]));
+        assertInvalid(validator.validate(schema, INVALID[1]));
       });
 
       it('should "compile" validator for schema', function() {
-        var validate = validator.compile(SCHEMA1);
-        assertValid(validate(VALID1));
-        assertInvalid(validate(INVALID1));
+        var validate = validator.compile(SCHEMA[1]);
+        assertValid(validate(VALID[1]));
+        assertInvalid(validate(INVALID[1]));
       });
 
       it('should "compile" validator for stringified schema', function() {
-        var validate = validator.compile(JSON.stringify(SCHEMA1));
-        assertValid(validate(VALID1));
-        assertInvalid(validate(INVALID1));
+        var validate = validator.compile(JSON.stringify(SCHEMA[1]));
+        assertValid(validate(VALID[1]));
+        assertInvalid(validate(INVALID[1]));
       });
 
       it('should add schema with "addSchema"', function() {
-        validator.addSchema(SCHEMA1);
+        validator.addSchema(SCHEMA[1]);
         assertGetSchema();
-        assertValid(validator.validate(SCHEMA2, VALID2));
-        assertInvalid(validator.validate(SCHEMA2, INVALID2));
+        assertValid(validator.validate(SCHEMA[2], VALID[2]));
+        assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
       it('should add stringified schema with "addSchema"', function() {
-        validator.addSchema(JSON.stringify(SCHEMA1));
+        validator.addSchema(JSON.stringify(SCHEMA[1]));
         assertGetSchema();
-        assertValid(validator.validate(SCHEMA2, VALID2));
-        assertInvalid(validator.validate(SCHEMA2, INVALID2));
+        assertValid(validator.validate(SCHEMA[2], VALID[2]));
+        assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
       it('should add schema via options', function() {
         var schemas = {};
-        schemas[SCHEMA1.id] = SCHEMA1;
+        schemas[SCHEMA[1].id] = SCHEMA[1];
         validator = new Validator({schemas: schemas});
         assertGetSchema();
-        assertValid(validator.validate(SCHEMA2, VALID2));
-        assertInvalid(validator.validate(SCHEMA2, INVALID2));
+        assertValid(validator.validate(SCHEMA[2], VALID[2]));
+        assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
       it('should add stringified schema via options', function() {
         var schemas = {};
-        schemas[SCHEMA1.id] = JSON.stringify(SCHEMA1);
+        schemas[SCHEMA[1].id] = JSON.stringify(SCHEMA[1]);
         validator = new Validator({schemas: schemas});
         assertGetSchema();
-        assertValid(validator.validate(SCHEMA2, VALID2));
-        assertInvalid(validator.validate(SCHEMA2, INVALID2));
+        assertValid(validator.validate(SCHEMA[2], VALID[2]));
+        assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
       var skipCustomFormats = VALIDATORS[validatorName].customFormats === false;
       (skipCustomFormats ? it.skip : it)
       ('should add custom regexp format via options', function() {
         validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/i}});
-        assertValid(validator.validate(SCHEMA3, VALID3));
-        assertInvalid(validator.validate(SCHEMA3, INVALID3));
+        assertValid(validator.validate(SCHEMA[3], VALID[3]));
+        assertInvalid(validator.validate(SCHEMA[3], INVALID[3]));
+      });
+
+      var skipAllErrors = VALIDATORS[validatorName].allErrors === false;
+      (skipAllErrors ? it.skip : it)
+      ('should support allErrors option', function() {
+        var validatorAll = new Validator({allErrors: true});
+        assertValid(validator.validate(SCHEMA[4], VALID[4]));
+        assertValid(validatorAll.validate(SCHEMA[4], VALID[4]));
+        var result = validator.validate(SCHEMA[4], INVALID[4]);
+        var resultAll = validatorAll.validate(SCHEMA[4], INVALID[4]);
+        assert.equal(result.valid, false);
+        assert.equal(resultAll.valid, false);
+        // console.log('*   one', result.errors);
+        // console.log('*** all', resultAll.errors);
+        assert(resultAll.errors.length > result.errors.length);
       });
 
       function assertValid(result) {
@@ -116,13 +133,15 @@ function describeConsolidate(validatorName) {
       }
 
       function assertGetSchema() {
-        assert.deepEqual(validator.getSchema(SCHEMA1.id), SCHEMA1);
+        assert.deepEqual(validator.getSchema(SCHEMA[1].id), SCHEMA[1]);
       }
     });
 
 
     function createTestSchemas(uriHost) {
-      SCHEMA1 = {
+      SCHEMA = []; VALID = []; INVALID = [];
+
+      SCHEMA[1] = {
         id: uriHost + 'schema1',
         type: 'object',
         properties: {
@@ -132,22 +151,22 @@ function describeConsolidate(validatorName) {
         required: ['s']
       };
 
+      VALID[1] = { s: 'test', n: 1 };
+      INVALID[1] = { s: 1, n: 'test' };
 
-      VALID1 = { s: 'test', n: 1 };
-      INVALID1 = { s: 1, n: 'test' };
 
-      SCHEMA2 = {
+      SCHEMA[2] = {
         id: uriHost + 'schema2',
         type: 'array',
         items: {'$ref': uriHost + 'schema1'},
         additionalItems: false
       };
 
-      VALID2 = [{s: 'test'}];
-      INVALID2 = [{n: 1}, {s: 'test', n: 2}];
+      VALID[2] = [{s: 'test'}];
+      INVALID[2] = [{n: 1}, {s: 'test', n: 2}];
 
 
-      SCHEMA3 = {
+      SCHEMA[3] = {
         id: uriHost + 'schema3',
         type: 'object',
         properties: {
@@ -156,8 +175,29 @@ function describeConsolidate(validatorName) {
         required: ['x']
       };
 
-      VALID3 = { x: 'Xyz1' };
-      INVALID3 = { x: '1xyz' };
+      VALID[3] = { x: 'Xyz1' };
+      INVALID[3] = { x: '1xyz' };
+
+
+      SCHEMA[4] = {
+        id: uriHost + 'schema4',
+        type: 'object',
+        properties: {
+          obj: {
+            type: 'object',
+            properties: {
+              s: { type: 'string', pattern: '^valid$' },
+              n: { type: 'number' }
+            },
+            required: ['s']
+          },
+          n: { type: 'number' }
+        },
+        required: ['obj']
+      };
+
+      VALID[4] = { obj: { s: 'valid', n: 1 }, n: 2 };
+      INVALID[4] = { obj: { s: 'invalid', n: 'invalid1' }, n: 'invalid2' };
     }
   });
 }

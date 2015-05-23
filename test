@@ -3,7 +3,7 @@
 validator=$1
 short=$2
 
-VALIDATORS=( "is-my-json-valid" "jjv" "skeemas" "tv4" "z-schema" )
+VALIDATORS=( "is-my-json-valid" "jjv" "jsonschema" "skeemas" "tv4" "z-schema" )
 
 function mocha_test()
 {
