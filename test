@@ -6,6 +6,7 @@ short=$2
 VALIDATORS=(
     "is-my-json-valid"
     "jjv"
+    "jsck"
     "jsen"
     "jsonschema"
     "schemasaurus"
@@ -15,8 +16,7 @@ VALIDATORS=(
     "z-schema"
 )
 
-function mocha_test()
-{
+function mocha_test() {
     local validator=$1
     local short=$2
     [[ "$short" == "true" ]] && reporter="min" || reporter="spec"
@@ -30,12 +30,11 @@ function mocha_test()
     export JSC_VALIDATOR=""
 }
 
-function schema_test()
-{
+function schema_test() {
     local validator=$1
     local short=$2
     sed -e "s/\${VALIDATOR}/$validator/" spec/adapter.template.js > spec/adapter.js
-    local results=$(json-schema-tests "spec/adapter.js")
+    results=$(json-schema-tests "spec/adapter.js")
     if [[ $short == "true" ]]; then
         echo "$validator: $(echo "$results" | grep -i 'passed')"
     else
@@ -44,22 +43,26 @@ function schema_test()
     fi
 }
 
+function echo_bold() {
+    echo "$(tput bold)"$'\n'"$1$(tput sgr0)"
+}
+
 if [[ $validator == "" || $validator == "--full" ]]; then
     [[ "$validator" == "--full" ]] && short="" || short="true"
-    echo $'\nconsolidate interface:'
+    echo_bold "consolidate interface:"
     for val in "${VALIDATORS[@]}"; do
         mocha_test $val $short
     done
 
-    echo $'\njson-schema suite:'
+    echo_bold "json-schema suite:"
     for val in "${VALIDATORS[@]}"; do
         schema_test $val $short
     done
 else
     [[ "$short" == "--short" ]] && short="true" || short=""
-    echo $'\nconsolidate interface:'
+    echo_bold "consolidate interface:"
     mocha_test $validator
 
-    echo $'\njson-schema suite:'
+    echo_bold "json-schema suite:"
     schema_test $validator $short
 fi

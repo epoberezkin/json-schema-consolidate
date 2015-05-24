@@ -1,12 +1,13 @@
 # json-schema-consolidate
 
-Unified interface to different JSON-schema validators
+Unified interface to different JSON-schema (draft4) validators
 
 
 ## Supported validators
 
 - [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
 - [jjv](https://github.com/acornejo/jjv)
+- [jsck](https://github.com/pandastrike/jsck)
 - [jsen](https://github.com/bugventure/jsen)
 - [jsonschema](https://github.com/tdegrunt/jsonschema)
 - [schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)
@@ -111,6 +112,7 @@ Validator specific options can also be passed.
 |---------|:-------------:|:-------:|:-------:|:-----:|:-----:|
 |[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|-|short|-|&#x2713;|&#x2713;|
 |[jjv](https://github.com/acornejo/jjv)|-|&#x2713;|-|&#x2713;|-|
+|[jsck](https://github.com/pandastrike/jsck)|-|-|-|-|&#x2713;|
 |[jsen](https://github.com/bugventure/jsen)|-|-|-|&#x2713;|&#x2713;|
 |[jsonschema](https://github.com/tdegrunt/jsonschema)|-|full|&#x2713;|-|-|
 |[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|-|RegExp|-|

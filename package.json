@@ -1,7 +1,7 @@
 {
   "name": "json-schema-consolidate",
-  "version": "0.1.9",
-  "description": "Unified api to different JSON-schema validators",
+  "version": "0.1.10",
+  "description": "Unified api to different JSON-schema (draft4) validators",
   "main": "index.js",
   "scripts": {
     "test": "./test"
@@ -27,8 +27,10 @@
     "json-stable-stringify": "^1.0.0"
   },
   "devDependencies": {
+    "coffee-script": "^1.9.2",
     "is-my-json-valid": "^2.12.0",
     "jjv": "^1.0.2",
+    "jsck": "^0.2.4",
     "jsen": "^0.2.0",
     "json-schema-tests": "^0.1.1",
     "jsonschema": "^1.0.1",

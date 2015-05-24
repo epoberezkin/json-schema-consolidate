@@ -9,14 +9,15 @@ var VALIDATOR = process.env.JSC_VALIDATOR;
 // Not/partially supported features
 // uris can be both full and short if not specified, short uris are used in the test in this case
 var VALIDATORS = {
-  'is-my-json-valid': { metaSchema: 'valid',                   fullUris: false, allErrors: false },
-  'jjv':              { metaSchema: 'valid',                                    allErrors: false },
-  'jsen':             { metaSchema: 'valid', addSchema: false,                  allErrors: false },
-  'jsonschema':       { metaSchema: 'valid',                   fullUris: true,                    customFormats: false },
-  'schemasaurus':     { metaSchema: 'valid', addSchema: false,                  allErrors: false, customFormats: RegExp },
-  'skeemas':          { metaSchema: 'valid',                   fullUris: true,  allErrors: false, customFormats: false },
-  'themis':           { metaSchema: 'valid',                                    allErrors: false },
-  'tv4':              { metaSchema: 'valid' },
+  'is-my-json-valid': {            metaSchema: 'valid',                   fullUris: false, allErrors: false },
+  'jjv':              {            metaSchema: 'valid',                                    allErrors: false },
+  'jsck':             { id: false, metaSchema: false,   addSchema: false,                  allErrors: false, customFormats: false },
+  'jsen':             {            metaSchema: 'valid', addSchema: false,                  allErrors: false },
+  'jsonschema':       {            metaSchema: 'valid',                   fullUris: true,                    customFormats: false },
+  'schemasaurus':     {            metaSchema: 'valid', addSchema: false,                  allErrors: false, customFormats: RegExp },
+  'skeemas':          {            metaSchema: 'valid',                   fullUris: true,  allErrors: false, customFormats: false },
+  'themis':           {            metaSchema: 'valid',                                    allErrors: false },
+  'tv4':              {            metaSchema: 'valid' },
   'z-schema':         { }
 };
 
@@ -34,7 +35,8 @@ function describeConsolidate(validatorName) {
     before(function() {
       Validator = consolidate(validatorName);
       var uriHost = VALIDATORS[validatorName].fullUris ? 'http://example.com/' : '';
-      createTestSchemas(uriHost);
+      var noId = VALIDATORS[validatorName].id === false;
+      createTestSchemas(uriHost, noId);
     });
 
     it('should create Validator instance', function() {
@@ -49,15 +51,12 @@ function describeConsolidate(validatorName) {
         validator = new Validator;
       });
 
-      var metaSchema = VALIDATORS[validatorName].metaSchema;
-      var skipValidateSchema = metaSchema === false;
-      (skipValidateSchema ? it.skip : it)
+      (skip('metaSchema') ? it.skip : it)
       ('should validate valid schema against metaschema', function() {
         assertValid(validator.validate(VALID[0], META_SCHEMA));
       });
 
-      var skipValidateInvalidSchema = skipValidateSchema || metaSchema == 'valid';
-      (skipValidateInvalidSchema ? it.skip : it)
+      (skip('metaSchema', 'valid') ? it.skip : it)
       ('should correctly validate INVALID schema against metaschema', function() {
         assertInvalid(validator.validate(INVALID[0], META_SCHEMA));
       });
@@ -85,8 +84,7 @@ function describeConsolidate(validatorName) {
         assertInvalid(validate(INVALID[1]));
       });
 
-      var skipAddSchema = VALIDATORS[validatorName].addSchema === false;
-      (skipAddSchema ? it.skip : it)
+      (skip('addSchema') ? it.skip : it)
       ('should add schema with "addSchema"', function() {
         validator.addSchema(SCHEMA[1]);
         assertGetSchema();
@@ -94,7 +92,7 @@ function describeConsolidate(validatorName) {
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      (skipAddSchema ? it.skip : it)
+      (skip('addSchema') ? it.skip : it)
       ('should add stringified schema with "addSchema"', function() {
         validator.addSchema(JSON.stringify(SCHEMA[1]));
         assertGetSchema();
@@ -102,7 +100,7 @@ function describeConsolidate(validatorName) {
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      (skipAddSchema ? it.skip : it)
+      (skip('addSchema') ? it.skip : it)
       ('should add schema via options', function() {
         var schemas = {};
         schemas[SCHEMA[1].id] = SCHEMA[1];
@@ -112,7 +110,7 @@ function describeConsolidate(validatorName) {
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      (skipAddSchema ? it.skip : it)
+      (skip('addSchema') ? it.skip : it)
       ('should add stringified schema via options', function() {
         var schemas = {};
         schemas[SCHEMA[1].id] = JSON.stringify(SCHEMA[1]);
@@ -122,17 +120,14 @@ function describeConsolidate(validatorName) {
         assertInvalid(validator.validate(SCHEMA[2], INVALID[2]));
       });
 
-      var customFormats = VALIDATORS[validatorName].customFormats;
-      var skipCustomFormats = customFormats === false;
-      (skipCustomFormats ? it.skip : it)
+      (skip('customFormats') ? it.skip : it)
       ('should support custom regexp format via options', function() {
         validator = new Validator({formats: {my_identifier: /^[a-z][a-z0-9_]*$/i}});
         assertValid(validator.validate(SCHEMA[3], VALID[3]));
         assertInvalid(validator.validate(SCHEMA[3], INVALID[3]));
       });
 
-      var skipFuncFormats = skipCustomFormats || customFormats == RegExp;
-      (skipFuncFormats ? it.skip : it)
+      (skip('customFormats', RegExp) ? it.skip : it)
       ('should support custom function format via options', function() {
         validator = new Validator({formats: {palindrome: palindrome}});
         assertValid(validator.validate(SCHEMA[4], VALID[4]));
@@ -143,8 +138,7 @@ function describeConsolidate(validatorName) {
         }
       });
 
-      var skipAllErrors = VALIDATORS[validatorName].allErrors === false;
-      (skipAllErrors ? it.skip : it)
+      (skip('allErrors') ? it.skip : it)
       ('should support allErrors option', function() {
         var validatorAll = new Validator({allErrors: true});
         assertValid(validator.validate(SCHEMA[5], VALID[5]));
@@ -173,10 +167,15 @@ function describeConsolidate(validatorName) {
       function assertGetSchema() {
         assert.deepEqual(validator.getSchema(SCHEMA[1].id), SCHEMA[1]);
       }
+
+      function skip(feature, value) {
+        var _feature = VALIDATORS[validatorName][feature];
+        return _feature === false || (value && _feature == value);
+      }
     });
 
 
-    function createTestSchemas(uriHost) {
+    function createTestSchemas(uriHost, noId) {
       SCHEMA = []; VALID = []; INVALID = [];
 
       VALID[0] = {
@@ -201,7 +200,7 @@ function describeConsolidate(validatorName) {
 
 
       SCHEMA[1] = {
-        id: uriHost + 'schema1',
+        id: noId ? undefined : uriHost + 'schema1',
         $schema: 'http://json-schema.org/draft-04/schema#',
         type: 'object',
         properties: {
@@ -217,7 +216,7 @@ function describeConsolidate(validatorName) {
 
       SCHEMA[2] = {
         id: uriHost + 'schema2',
-        $schema: 'http://json-schema.org/draft-04/schema#',
+        // $schema: 'http://json-schema.org/draft-04/schema#',
         type: 'array',
         items: {'$ref': uriHost + 'schema1'},
         additionalItems: false
