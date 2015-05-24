@@ -1,6 +1,6 @@
 # json-schema-consolidate
 
-Unified interface to different JSON-schema (draft4) validators
+Adapter to different JSON-schema (draft4) validators
 
 
 ## Supported validators

@@ -1,7 +1,7 @@
 {
   "name": "json-schema-consolidate",
   "version": "0.1.11",
-  "description": "Unified api to different JSON-schema (draft4) validators",
+  "description": "Adapter to different JSON-schema (draft4) validators",
   "main": "index.js",
   "scripts": {
     "test": "./test"

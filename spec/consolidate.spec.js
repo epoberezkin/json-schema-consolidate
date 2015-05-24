@@ -153,6 +153,16 @@ function describeConsolidate(validatorName) {
         assert(resultAll.errors.length > result.errors.length);
       });
 
+      if (validatorName == 'tv4') {
+        it('should support banUnknownProperties option', function() {
+          var validatorNA = new Validator({banUnknownProperties: true});
+          assertValid(validator.validate(SCHEMA[6], VALID[6]));
+          assertValid(validatorNA.validate(SCHEMA[6], VALID[6]));
+          assertValid(validator.validate(SCHEMA[6], INVALID[6]));
+          assertInvalid(validatorNA.validate(SCHEMA[6], INVALID[6]));
+        });
+      }
+
       function assertValid(result) {
         // console.log(result);
         assert(result.valid)
@@ -275,6 +285,19 @@ function describeConsolidate(validatorName) {
 
       VALID[5] = { obj: { s: 'valid', n: 1 }, n: 2 };
       INVALID[5] = { obj: { s: 'invalid', n: 'invalid1' }, n: 'invalid2' };
+
+
+      SCHEMA[6] = {
+        id: uriHost + 'schema4',
+        $schema: 'http://json-schema.org/draft-04/schema#',
+        type: 'object',
+        properties: {
+          s: { type: 'string' }
+        }
+      };
+
+      VALID[6] = { s: 'test' };
+      INVALID[6] = { s: 'test', additional: 'invalid' };
     }
   });
 }
