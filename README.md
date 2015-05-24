@@ -2,6 +2,7 @@
 
 Adapter to different JSON-schema (draft4) validators
 
+[![Build Status](https://travis-ci.org/epoberezkin/json-schema-consolidate.svg?branch=master)](https://travis-ci.org/epoberezkin/json-schema-consolidate)
 
 ## Supported validators
 

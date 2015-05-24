@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# set -e
+set -e
 
 validator=$1
 short=$2
@@ -39,7 +39,7 @@ function schema_test() {
     sed -e "s/\${VALIDATOR}/$validator/" spec/adapter.template.js > spec/adapter.js
     results=$(json-schema-tests "spec/adapter.js")
     if [[ $short == "true" ]]; then
-        echo "$validator: $(echo "$results" | grep -i 'passed')"
+        echo "$validator: "$(echo "$results" | grep -i 'passed')
     else
         echo $'\n\n'"Testing ${validator}"$'\n'
         echo "$results"
