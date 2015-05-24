@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# set -e
+
 validator=$1
 short=$2
 

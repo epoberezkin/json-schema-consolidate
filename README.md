@@ -116,7 +116,7 @@ Validator specific options can also be passed.
 |[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|-|short|-|&#x2713;|&#x2713;|2/9|
 |[jayschema](https://github.com/natesilva/jayschema)|-|&#x2713;|-|&#x2713;|-|2/8|
 |[jjv](https://github.com/acornejo/jjv)|-|&#x2713;|-|&#x2713;|-|2/9|
-|[jsck](https://github.com/pandastrike/jsck)|-|-|-|-|&#x2713;|9/11|
+|[jsck](https://github.com/pandastrike/jsck)|-|&#x2713;|-|-|&#x2713;|4/11|
 |[jsen](https://github.com/bugventure/jsen)|-|-|-|&#x2713;|&#x2713;|6/7|
 |[jsonschema](https://github.com/tdegrunt/jsonschema)|-|full|&#x2713;|-|-|3/9|
 |[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|-|RegExp|-|7/10|
