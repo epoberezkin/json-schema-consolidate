@@ -5,6 +5,7 @@ short=$2
 
 VALIDATORS=(
     "is-my-json-valid"
+    "jayschema"
     "jjv"
     "jsck"
     "jsen"

@@ -6,6 +6,7 @@ Unified interface to different JSON-schema (draft4) validators
 ## Supported validators
 
 - [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
+- [jayschema](https://github.com/natesilva/jayschema)
 - [jjv](https://github.com/acornejo/jjv)
 - [jsck](https://github.com/pandastrike/jsck)
 - [jsen](https://github.com/bugventure/jsen)
@@ -60,11 +61,13 @@ If the referenced schema is missing it is an error (for all validators - tv4 is 
 For compiling validators, this method will cache compiled schemas using serialized schema as a key ([json-stable-stringify](https://github.com/substack/json-stable-stringify) is used).
 
 
-### Create validating function
+### Compile
+
+(create validating function)
 
 ```
 var validate = validator.compile(schema);
-var result = validate(json);
+var result = validate(json); // { valid: true/false, errors: [...] }
 ```
 
 For interpreting validators this method will simply return a closure that can be used to validate json, but there will be no performance gain.
@@ -78,7 +81,7 @@ For interpreting validators this method will simply return a closure that can be
 validator.addSchema(schema, id);
 ```
 
-If `id` is not passed, schema.id will be used
+If `id` is not passed, `schema.id` will be used
 
 `schema` can be array of schemas, in which case the second parameter is not used.
 
@@ -96,11 +99,11 @@ var schema = validator.getSchema(id);
 
 These options are available in all supported validators:
 
-- allErrors - continue validation after errors and return all validation errors
+- `allErrors` - continue validation after errors and return all validation errors.
 
-- schemas - include some schemas, same result as calling `addSchema` method
+- `schemas` - include some schemas, same result as calling `addSchema` method.
 
-- formats - define additional formats, most validators support RegExp and functions
+- `formats` - define additional formats, most validators support RegExp and functions. Format function should return validation success as boolean for ALL validators used with json-schema-consolidate.
 
 
 Validator specific options can also be passed.
@@ -108,28 +111,31 @@ Validator specific options can also be passed.
 
 ## Validators compatibility
 
-|validator|meta-schema|addSchema|allErrors|formats|compile|
-|---------|:-------------:|:-------:|:-------:|:-----:|:-----:|
-|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|-|short|-|&#x2713;|&#x2713;|
-|[jjv](https://github.com/acornejo/jjv)|-|&#x2713;|-|&#x2713;|-|
-|[jsck](https://github.com/pandastrike/jsck)|-|-|-|-|&#x2713;|
-|[jsen](https://github.com/bugventure/jsen)|-|-|-|&#x2713;|&#x2713;|
-|[jsonschema](https://github.com/tdegrunt/jsonschema)|-|full|&#x2713;|-|-|
-|[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|-|RegExp|-|
-|[skeemas](https://github.com/Prestaul/skeemas)|-|full|-|-|-|
-|[themis](https://github.com/playlyfe/themis)|-|&#x2713;|-|&#x2713;|&#x2713;|
-|[tv4](https://github.com/geraintluff/tv4)|-|&#x2713;|&#x2713;|&#x2713;|-|
-|[z-schema](https://github.com/zaggino/z-schema)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-|
+|validator|meta| ref |allErrors|formats|compile|fails|
+|---------|:--:|:---:|:-------:|:-----:|:-----:|:---:|
+|[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|-|short|-|&#x2713;|&#x2713;|2/9|
+|[jayschema](https://github.com/natesilva/jayschema)|-|&#x2713;|-|&#x2713;|-|2/8|
+|[jjv](https://github.com/acornejo/jjv)|-|&#x2713;|-|&#x2713;|-|2/9|
+|[jsck](https://github.com/pandastrike/jsck)|-|-|-|-|&#x2713;|9/11|
+|[jsen](https://github.com/bugventure/jsen)|-|-|-|&#x2713;|&#x2713;|6/7|
+|[jsonschema](https://github.com/tdegrunt/jsonschema)|-|full|&#x2713;|-|-|3/9|
+|[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|-|RegExp|-|7/10|
+|[skeemas](https://github.com/Prestaul/skeemas)|-|full|-|-|-|4/8|
+|[themis](https://github.com/playlyfe/themis)|-|&#x2713;|-|&#x2713;|&#x2713;|2/8|
+|[tv4](https://github.com/geraintluff/tv4)|-|&#x2713;|&#x2713;|&#x2713;|-|1/17|
+|[z-schema](https://github.com/zaggino/z-schema)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-|-/6|
 
-- `meta-schema`: validator can _correctly_ validate schema against [meta-schema](http://json-schema.org/documentation.html). Most validators validate invalid schema as valid in the test.
+- `meta`: validator can _correctly_ validate schema against [meta-schema](http://json-schema.org/documentation.html). Most validators validate invalid schema as valid in the test.
 
-- `addSchema`: support for referencing schemas in other files. Some validators support only `full` uris, some only `short` uris and some support both (`+`). [jsen](https://github.com/bugventure/jsen) doesn't seem to support referencing schemas in other files.
+- `ref`: support for referencing schemas in other files. Some validators support only `full` uris, some only `short` uris and some support both (&#x2713;).
 
 - `allErrors`: if supported, the validator will stop after the first error unless this options is set to true.
 
-- `formats`: most validators support functions and RegExp (some only with this package) as custom formats (`+`). Some support only `RegExp`.
+- `formats`: most validators support functions and RegExp (some only with this package) as custom formats (&#x2713;). Some support only `RegExp`.
 
-- `compile`: validators that compile schemas into validating functions. Even if a validator doesn't compile schemas, you can use `compile` method - it will return a closure that will validate using the passed schema.
+- `compile`: validators that compile schemas into validating functions. Even if a validator doesn't compile schemas, you can use `compile` method - it will return a function that will validate using the passed schema.
+
+- `fails`: the number of tests that fails. The first number - tests in json-schema-consolidate interface tests, the second - the tests in the official json-schema draft4 test suite.
 
 
 ## Running tests
@@ -152,7 +158,7 @@ Then you can run tests with `./test` script:
 ./test <validator> --short
 ```
 
-Skipped tests are either not implemented or failing features in validators.
+Skipped tests are features in validators that are either not implemented or failing.
 
 
 ## License

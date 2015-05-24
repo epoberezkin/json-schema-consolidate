@@ -10,6 +10,7 @@ var VALIDATOR = process.env.JSC_VALIDATOR;
 // uris can be both full and short if not specified, short uris are used in the test in this case
 var VALIDATORS = {
   'is-my-json-valid': {            metaSchema: 'valid',                   fullUris: false, allErrors: false },
+  'jayschema':        {            metaSchema: 'valid',                                    allErrors: false },
   'jjv':              {            metaSchema: 'valid',                                    allErrors: false },
   'jsck':             { id: false, metaSchema: false,   addSchema: false,                  allErrors: false, customFormats: false },
   'jsen':             {            metaSchema: 'valid', addSchema: false,                  allErrors: false },
