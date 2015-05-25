@@ -9,16 +9,16 @@ var VALIDATOR = process.env.JSC_VALIDATOR;
 // Not/partially supported features
 // uris can be both full and short if not specified, short uris are used in the test in this case
 var VALIDATORS = {
-  'is-my-json-valid': { metaSchema: 'valid',                   uri: 'short', allErrors: false },
-  'jayschema':        { metaSchema: 'valid',                                 allErrors: false },
-  'jjv':              { metaSchema: 'valid',                                 allErrors: false },
-  'jsck':             { metaSchema: 'valid', addSchema: true,  uri: 'full#', allErrors: false, customFormats: false },
-  'jsen':             { metaSchema: 'valid', addSchema: false,               allErrors: false },
-  'jsonschema':       { metaSchema: 'valid',                   uri: 'full',                    customFormats: false },
-  'schemasaurus':     { metaSchema: 'valid', addSchema: false,               allErrors: false, customFormats: RegExp },
-  'skeemas':          { metaSchema: 'valid',                   uri: 'full',  allErrors: false, customFormats: false },
-  'themis':           { metaSchema: 'valid',                                 allErrors: false },
-  'tv4':              { metaSchema: 'valid' },
+  'is-my-json-valid': { metaSchema: false,                   uri: 'short', allErrors: false },
+  'jayschema':        {                                                    allErrors: false },
+  'jjv':              { metaSchema: false,                                 allErrors: false },
+  'jsck':             {                    addSchema: true,  uri: 'full#', allErrors: false, customFormats: false },
+  'jsen':             { metaSchema: false, addSchema: false,               allErrors: false },
+  'jsonschema':       { metaSchema: false,                   uri: 'full',                    customFormats: false },
+  'schemasaurus':     { metaSchema: false, addSchema: false,               allErrors: false, customFormats: RegExp },
+  'skeemas':          {                                      uri: 'full',  allErrors: false, customFormats: false },
+  'themis':           { metaSchema: false,                                 allErrors: false },
+  'tv4':              { metaSchema: false },
   'z-schema':         { }
 };
 
@@ -52,12 +52,12 @@ function describeConsolidate(validatorName) {
 
       (skip('metaSchema') ? it.skip : it)
       ('should validate valid schema against metaschema', function() {
-        assertValid(validator.validate(VALID[0], META_SCHEMA));
+        assertValid(validator.validate(META_SCHEMA, VALID[0]));
       });
 
-      (skip('metaSchema', 'valid') ? it.skip : it)
+      (skip('metaSchema') ? it.skip : it)
       ('should correctly validate INVALID schema against metaschema', function() {
-        assertInvalid(validator.validate(INVALID[0], META_SCHEMA));
+        assertInvalid(validator.validate(META_SCHEMA, INVALID[0]));
       });
 
       it('should validate json against schema', function() {
