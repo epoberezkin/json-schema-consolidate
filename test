@@ -37,7 +37,7 @@ function schema_test() {
     local validator=$1
     local short=$2
     sed -e "s/\${VALIDATOR}/$validator/" spec/adapter.template.js > spec/adapter.js
-    results=$(json-schema-tests "spec/adapter.js")
+    local results=$(json-schema-tests "spec/adapter.js")
     if [[ $short == "true" ]]; then
         echo "$validator: "$(echo "$results" | grep -i 'passed')
     else

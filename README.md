@@ -124,7 +124,7 @@ Validator specific options can also be passed.
 |[skeemas](https://github.com/Prestaul/skeemas)|-|full|-|-|-|4/8|
 |[themis](https://github.com/playlyfe/themis)|-|&#x2713;|-|&#x2713;|&#x2713;|2/8|
 |[tv4](https://github.com/geraintluff/tv4)|-|&#x2713;|&#x2713;|&#x2713;|-|1/17|
-|[z-schema](https://github.com/zaggino/z-schema)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-|-/6|
+|[z-schema](https://github.com/zaggino/z-schema)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-/6|
 
 - `meta`: validator can _correctly_ validate schema against [meta-schema](http://json-schema.org/documentation.html). Most validators validate invalid schema as valid in the test.
 
