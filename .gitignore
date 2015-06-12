@@ -29,3 +29,5 @@ node_modules
 
 # test adapter for the last schema
 spec/adapter.js
+
+.DS_Store

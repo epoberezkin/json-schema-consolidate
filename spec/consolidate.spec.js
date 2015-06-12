@@ -9,15 +9,15 @@ var VALIDATOR = process.env.JSC_VALIDATOR;
 // Not/partially supported features
 // uris can be both full and short if not specified, short uris are used in the test in this case
 var VALIDATORS = {
-  'is-my-json-valid': { metaSchema: false,                   uri: 'short', allErrors: false },
+  'is-my-json-valid': {                                      uri: 'short', allErrors: false },
   'jayschema':        {                                                    allErrors: false },
-  'jjv':              { metaSchema: false,                                 allErrors: false },
+  'jjv':              {                                                    allErrors: false },
   'jsck':             {                    addSchema: true,  uri: 'full#', allErrors: false, customFormats: false },
-  'jsen':             { metaSchema: false, addSchema: false,               allErrors: false },
+  'jsen':             {                    addSchema: false,               allErrors: false },
   'jsonschema':       { metaSchema: false,                   uri: 'full',                    customFormats: false },
   'schemasaurus':     { metaSchema: false, addSchema: false,               allErrors: false, customFormats: RegExp },
   'skeemas':          {                                      uri: 'full',  allErrors: false, customFormats: false },
-  'themis':           { metaSchema: false,                                 allErrors: false },
+  'themis':           {                                                    allErrors: false },
   'tv4':              { metaSchema: false },
   'z-schema':         { }
 };
@@ -191,7 +191,7 @@ function describeConsolidate(validatorName) {
       var uriHash = uri && uri.indexOf('#') >= 0 ? '#' : '';
 
       VALID[0] = {
-        id: uriHost + 'schema0a' + uriHash,
+        id: 'http://example.com/schema0a' + uriHash,
         $schema: 'http://json-schema.org/draft-04/schema#',
         type: 'object',
         properties: {
@@ -201,7 +201,7 @@ function describeConsolidate(validatorName) {
       };
 
       INVALID[0] = {
-        id: uriHost + 'schema0b' + uriHash,
+        id: 'http://example.com/schema0b' + uriHash,
         $schema: 'http://json-schema.org/draft-04/schema#',
         type: 'object',
         properties: [

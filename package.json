@@ -1,6 +1,6 @@
 {
   "name": "json-schema-consolidate",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Adapter to different JSON-schema (draft4) validators",
   "main": "index.js",
   "scripts": {
@@ -28,18 +28,18 @@
   },
   "devDependencies": {
     "coffee-script": "^1.9.2",
-    "is-my-json-valid": "^2.12.0",
-    "jayschema": "^0.3.1",
-    "jjv": "^1.0.2",
-    "jsck": "^0.2.4",
-    "jsen": "^0.2.0",
+    "is-my-json-valid": "latest",
+    "jayschema": "latest",
+    "jjv": "latest",
+    "jsck": "latest",
+    "jsen": "latest",
     "json-schema-tests": "^0.1.1",
-    "jsonschema": "^1.0.1",
+    "jsonschema": "latest",
     "mocha": "^2.2.5",
-    "schemasaurus": "^0.7.7",
-    "skeemas": "^1.1.6",
-    "themis": "^1.1.5",
-    "tv4": "^1.1.9",
-    "z-schema": "^3.10.2"
+    "schemasaurus": "latest",
+    "skeemas": "latest",
+    "themis": "latest",
+    "tv4": "latest",
+    "z-schema": "latest"
   }
 }
