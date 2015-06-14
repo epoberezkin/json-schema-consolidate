@@ -3,6 +3,7 @@
 Adapter to different JSON-schema (draft4) validators
 
 [![Build Status](https://travis-ci.org/epoberezkin/json-schema-consolidate.svg?branch=master)](https://travis-ci.org/epoberezkin/json-schema-consolidate)
+[![npm version](https://badge.fury.io/js/json-schema-consolidate.svg)](http://badge.fury.io/js/json-schema-consolidate)
 
 ## Supported validators
 
