@@ -6,6 +6,7 @@ Adapter to different JSON-schema (draft4) validators
 
 ## Supported validators
 
+- [ajv](https://github.com/epoberezkin/ajv)
 - [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)
 - [jayschema](https://github.com/natesilva/jayschema)
 - [jjv](https://github.com/acornejo/jjv)
@@ -20,7 +21,7 @@ Adapter to different JSON-schema (draft4) validators
 
 You must install the validator(s) you use separately.
 
-See [Validators compatibility](https://github.com/epoberezkin/json-schema-consolidate#validators-compatibility) and [json-schema-benchmark](https://github.com/ebdrup/json-schema-benchmark).
+See [Validators compatibility](#validators-compatibility) and [json-schema-benchmark](https://github.com/ebdrup/json-schema-benchmark).
 
 
 ## Install
@@ -114,6 +115,7 @@ Validator specific options can also be passed.
 
 |validator|meta| ref |allErrors|formats|compile|fails|
 |---------|:--:|:---:|:-------:|:-----:|:-----:|:---:|
+|[ajv](https://github.com/epoberezkin/ajv)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-/-|
 |[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|&#x2713;|short|-|&#x2713;|&#x2713;|3/9|
 |[jayschema](https://github.com/natesilva/jayschema)|&#x2713;|&#x2713;|-|&#x2713;|-|1/5|
 |[jjv](https://github.com/acornejo/jjv)|&#x2713;|&#x2713;|-|&#x2713;|-|3/4|
@@ -121,12 +123,12 @@ Validator specific options can also be passed.
 |[jsen](https://github.com/bugventure/jsen)|&#x2713;|-|-|&#x2713;|&#x2713;|7/7|
 |[jsonschema](https://github.com/tdegrunt/jsonschema)|-|full|&#x2713;|-|-|4/3|
 |[schemasaurus](https://github.com/AlexeyGrishin/schemasaurus)|-|-|-|RegExp|&#x2713;|8/10|
-|[skeemas](https://github.com/Prestaul/skeemas)|&#x2713;|full|-|-|-|3/8|
+|[skeemas](https://github.com/Prestaul/skeemas)|&#x2713;|full|-|-|-|3/1|
 |[themis](https://github.com/playlyfe/themis)|&#x2713;|&#x2713;|-|&#x2713;|&#x2713;|3/8|
 |[tv4](https://github.com/geraintluff/tv4)|-|&#x2713;|&#x2713;|&#x2713;|-|2/11|
 |[z-schema](https://github.com/zaggino/z-schema)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-/6|
 
-- `meta`: validator can correctly validate schema against [meta-schema](http://json-schema.org/documentation.html). Many validators validate valid schemas as invalid or just throw error in this test.
+- `meta`: validator can correctly validate schema against [meta-schema](http://json-schema.org/documentation.html). Some validators validate valid schemas as invalid or just throw error in this test.
 
 - `ref`: support for referencing schemas in other files. Some validators support only `full` uris, some only `short` uris and some support both (&#x2713;).
 

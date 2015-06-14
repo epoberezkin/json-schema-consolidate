@@ -6,6 +6,7 @@ validator=$1
 short=$2
 
 VALIDATORS=(
+    "ajv"
     "is-my-json-valid"
     "jayschema"
     "jjv"

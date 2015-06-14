@@ -9,6 +9,7 @@ var VALIDATOR = process.env.JSC_VALIDATOR;
 // Not/partially supported features
 // uris can be both full and short if not specified, short uris are used in the test in this case
 var VALIDATORS = {
+  'ajv':              { },
   'is-my-json-valid': {                                      uri: 'short', allErrors: false },
   'jayschema':        {                                                    allErrors: false },
   'jjv':              {                                                    allErrors: false },

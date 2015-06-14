@@ -10,8 +10,11 @@ var remoteRefs = {
     'http://json-schema.org/draft-04/schema': require('./meta_schema.json')
 };
 
-var NO_REMOTES = ['skeemas', 'themis', 'jsck'];
+var NO_REMOTES = ['themis', 'jsck'];
+var NO_META = ['ajv'];
+
 if (NO_REMOTES.indexOf(validatorName) == -1) var schemas = remoteRefs;
+if (NO_META.indexOf(validatorName) >= 0) delete schemas['http://json-schema.org/draft-04/schema'];
 var validator = consolidate(validatorName, { allErrors: true, schemas: schemas });
 
 module.exports = {
@@ -23,6 +26,9 @@ module.exports = {
 
 function ignoredTests() {
     return {
+        'ajv': {
+            'optional/zeroTerminatedFloats': true
+        },
         'is-my-json-valid': {
             definitions: ['invalid definition'],
             maxLength: true,
@@ -73,10 +79,7 @@ function ignoredTests() {
             refRemote: true
         },
         'skeemas': {
-            definitions: true,
-            'optional/zeroTerminatedFloats': true,
-            ref: ['remote ref, containing refs itself'],
-            refRemote: true
+            'optional/zeroTerminatedFloats': true
         },
         'themis': {
             definitions: true,
