@@ -1,6 +1,6 @@
 {
   "name": "json-schema-consolidate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adapter to different JSON-schema (draft4) validators",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "json-stable-stringify": "^1.0.0"
   },
   "devDependencies": {
-    "ajv": "0.3.11",
+    "ajv": "latest",
     "coffee-script": "^1.9.2",
     "is-my-json-valid": "latest",
     "jayschema": "latest",
