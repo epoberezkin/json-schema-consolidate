@@ -115,7 +115,7 @@ Validator specific options can also be passed.
 
 |validator|meta| ref |allErrors|formats|compile|fails|
 |---------|:--:|:---:|:-------:|:-----:|:-----:|:---:|
-|[ajv](https://github.com/epoberezkin/ajv)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-/-|
+|[ajv](https://github.com/epoberezkin/ajv)|&#x2713;|&#x2713;|&#x2713;|&#x2713;|&#x2713;|-/1|
 |[is-my-json-valid](https://github.com/mafintosh/is-my-json-valid)|&#x2713;|short|-|&#x2713;|&#x2713;|3/9|
 |[jayschema](https://github.com/natesilva/jayschema)|&#x2713;|&#x2713;|-|&#x2713;|-|1/5|
 |[jjv](https://github.com/acornejo/jjv)|&#x2713;|&#x2713;|-|&#x2713;|-|3/4|
