@@ -11,7 +11,7 @@ var remoteRefs = {
 };
 
 var NO_REMOTES = ['themis', 'jsck'];
-var NO_META = ['ajv'];
+var NO_META = ['ajv']; // meta-schema is already added by default
 
 if (NO_REMOTES.indexOf(validatorName) == -1) var schemas = remoteRefs;
 if (NO_META.indexOf(validatorName) >= 0) delete schemas['http://json-schema.org/draft-04/schema'];
